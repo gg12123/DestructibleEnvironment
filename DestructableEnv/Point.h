@@ -14,6 +14,7 @@ enum class PointPlaneRelationship
 };
 
 class UShape;
+class NewPointsGetter;
 
 /**
  * 
@@ -23,7 +24,7 @@ class DESTRUCTABLEENV_API Point
 public:
 	static constexpr float PointInPlaneTol = 0.0001f;
 
-	Point(FVector point)
+	Point(const FVector& point)
 	{
 		m_Point = point;
 	}
@@ -42,6 +43,16 @@ public:
 		m_PlaneRelationship = relationship;
 	}
 
+	FVector GetPoint() const
+	{
+		return m_Point;
+	}
+
+	void SetPoint(const FVector& p)
+	{
+		m_Point = p;
+	}
+
 	int GetId() const
 	{
 		return m_Id;
@@ -52,7 +63,7 @@ public:
 		m_Id = id;
 	}
 
-	void CentreAndCache(FVector centre, std::vector<FVector> points)
+	void CentreAndCache(const FVector& centre, std::vector<FVector>& points)
 	{
 		m_Point -= centre;
 		points.push_back(centre);
@@ -92,7 +103,7 @@ public:
 		return;
 	}
 
-	void Split(FVector P0, FVector n, UShape* shapeAbove, UShape* shapeBelow, int& numInside);
+	void Split(const FVector& P0, const FVector& n, NewPointsGetter& newPoints, UShape& shapeAbove, UShape& shapeBelow, int& numInside);
 
 	static bool PointsBridgePlane(Point &p1, Point& p2)
 	{
@@ -105,17 +116,17 @@ public:
 		return false;
 	}
 
-	static bool BothAbove(Point& p1, Point& p2)
+	static bool BothAbove(const Point& p1, const Point& p2)
 	{
 		return p1.GetPlaneRelationship() == PointPlaneRelationship::Above && p2.GetPlaneRelationship() == PointPlaneRelationship::Above;
 	}
 
-	static bool BothBelow(Point& p1, Point& p2)
+	static bool BothBelow(const Point& p1, const Point& p2)
 	{
 		return p1.GetPlaneRelationship() == PointPlaneRelationship::Below && p2.GetPlaneRelationship() == PointPlaneRelationship::Below;
 	}
 
-	static bool BothInside(Point& p1, Point& p2)
+	static bool BothInside(const Point& p1, const Point& p2)
 	{
 		return p1.GetPlaneRelationship() == PointPlaneRelationship::Inside && p2.GetPlaneRelationship() == PointPlaneRelationship::Inside;
 	}

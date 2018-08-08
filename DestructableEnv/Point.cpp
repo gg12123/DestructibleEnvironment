@@ -2,8 +2,9 @@
 
 #include "Point.h"
 #include "Shape.h"
+#include "NewPointsGetter.h"
 
-void Point::Split(FVector P0, FVector n, UShape* shapeAbove, UShape* shapeBelow, int& numInside)
+void Point::Split(const FVector& P0, const FVector& n, NewPointsGetter& newPoints, UShape& shapeAbove, UShape& shapeBelow, int& numInside)
 {
 	m_LinkedPoint1 = nullptr;
 	m_LinkedPoint2 = nullptr;
@@ -15,7 +16,7 @@ void Point::Split(FVector P0, FVector n, UShape* shapeAbove, UShape* shapeBelow,
 		auto newAbove = this;
 		auto newBelow = new Point(m_Point);
 
-		//newPoints.AddPoints(this, newAbove, newBelow);
+		newPoints.AddPoints(*this, *newAbove, *newBelow);
 
 		//shapeAbove.AddPoint(newAbove);
 		//shapeBelow.AddPoint(newBelow);
